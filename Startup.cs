@@ -11,6 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BSTProject.Data;
 using Syncfusion.Blazor;
+
+using System.Globalization;
+using BSTProject.Shared;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Localization;
 namespace BSTProject
 {
     public class Startup
@@ -30,11 +35,35 @@ namespace BSTProject
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            #region Localization
+        // Set the resx file folder path to access
+        services.AddLocalization(options => options.ResourcesPath = "Resources")    ;
+        services.AddSyncfusionBlazor();
+        // Register the Syncfusion locale service to customize the  SyncfusionBlazor component locale culture
+        services.AddSingleton(typeof(ISyncfusionStringLocalizer), typeof    (SyncfusionLocalizer));
+        services.Configure<RequestLocalizationOptions>(options =>
+        {
+            // Define the list of cultures your app will support
+            var supportedCultures = new List<CultureInfo>()
+            {
+                //new CultureInfo("en-US"),
+                new CultureInfo("zh")
+            };
+            // Set the default culture
+            options.DefaultRequestCulture = new RequestCulture("zh");
+            options.SupportedCultures = supportedCultures;
+            options.SupportedUICultures = supportedCultures;
+        });
+        #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            #region Localization
+        app.UseRequestLocalization(app.ApplicationServices. GetService<IOptions<RequestLocalizationOptions>>().Value);
+
+        #endregion
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
