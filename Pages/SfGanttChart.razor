@@ -1,6 +1,27 @@
 @page "/ganttchart"
 
-<SfGantt DataSource="@TaskCollection" Height="450px" Width="1200px" @ref="Gantt" AllowRowDragAndDrop="true" HighlightWeekends="true" ContextMenuItems="@(new List<object>() { "TaskInformation","Indent","Outdent"})">
+<table class="table">
+
+    <tbody>
+        <tr>
+            <th scope="col"><h6>Please Enter the Level and Click Collapse/Expand  Button</h6></th>
+        </tr>
+        <tr>
+            <td>
+                <input type="number" @bind-value="@Level">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" class="btn btn-primary" @onclick="CollapseAtLevel">Collapse</button>
+                <button type="button" class="btn btn-primary" @onclick="ExpandAtLevel">Expand</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<SfGantt DataSource="@TaskCollection" Width="1000px" @ref="Gantt" AllowRowDragAndDrop="true" HighlightWeekends="true" ContextMenuItems="@(new List<object>() { "TaskInformation","Indent","Outdent","DeleteTask"})" AllowReordering="true" ShowColumnMenu="true">
     <GanttTaskFields Id="TaskId" Name="TaskName" StartDate="StartDate" EndDate="EndDate" Duration="Duration" ParentID="ParentId" Dependency="Predecessor"></GanttTaskFields>
     <GanttColumns>
         <GanttColumn Field="TaskId"></GanttColumn>
@@ -35,7 +56,7 @@
             </div>
         </TaskbarTemplate>
     </GanttTemplates>
-    <GanttEvents  QueryCellInfo="QueryCellInfo" QueryChartRowInfo="QueryChartRowInfo" TValue="TaskData"></GanttEvents>
+    <GanttEvents QueryCellInfo="QueryCellInfo" QueryChartRowInfo="QueryChartRowInfo" TValue="TaskData"></GanttEvents>
 </SfGantt>
 
 <style>
@@ -47,12 +68,15 @@
     .e-custom-moments {
         background-color: #60A3D9;
     }
+
     .intro {
         background-color: #E8EEF1;
     }
+
     .e-gantt .e-right-resize-gripper::before {
         content: '\e80b'
     }
+
     .e-gantt .e-left-resize-gripper::before {
         content: '\e80b'
     }
@@ -61,6 +85,7 @@
 @code{
     public SfGantt<TaskData> Gantt;
     public List<TaskData> TaskCollection { get; set; }
+    public double Level { get; set; }
     protected override void OnInitialized()
     {
         this.TaskCollection = GetTaskCollection();
@@ -76,10 +101,18 @@
         public string Predecessor { get; set; }
         public int? ParentId { get; set; }
     }
+    public void CollapseAtLevel()
+    {
+        this.Gantt.CollapseAtLevel(Level);
+    }
+    public void ExpandAtLevel()
+    {
+        this.Gantt.ExpandAtLevel(Level);
+    }
     public string Formatter(DateTime? date)
     {
         DateTime dateTime = (DateTime)(date);
-        string bottomString = dateTime.Day + "-" + (dateTime.Day+6);
+        string bottomString = dateTime.Day + "-" + (dateTime.Day + 6);
         return bottomString;
     }
     public void QueryCellInfo(Syncfusion.Blazor.Grids.QueryCellInfoEventArgs<TaskData> args)
@@ -92,7 +125,7 @@
         String[] s1 = new String[1] { "intro" };
         args.Row.AddClass(s1);
     }
-public static List<TaskData> GetTaskCollection()
+    public static List<TaskData> GetTaskCollection()
     {
         List<TaskData> Tasks = new List<TaskData>() {
 
@@ -157,6 +190,36 @@ public static List<TaskData> GetTaskCollection()
         Duration = "25",
         Progress = 30,
         ParentId = 5,
+    },
+     new TaskData() {
+        TaskId = 9,
+        TaskName = "Demand Analysis",
+        StartDate = new DateTime(2019, 04, 02),
+        EndDate = new DateTime(2019, 04, 21)
+    },
+    new TaskData() {
+        TaskId = 10,
+        TaskName = "Customer Strength",
+        StartDate = new DateTime(2019, 04, 04),
+        Duration = "3",
+        Progress = 30,
+        ParentId = 9,
+    },
+    new TaskData() {
+        TaskId = 11,
+        TaskName = "Competitor analysis",
+        StartDate = new DateTime(2019, 04, 04),
+        Duration = "13",
+        Progress = 40,
+        ParentId = 10,
+    },
+    new TaskData() {
+        TaskId = 12,
+        TaskName = "Product Strength Analysis",
+        StartDate = new DateTime(2019, 04, 04),
+        Duration = "25",
+        Progress = 30,
+        ParentId = 11,
     }
 };
         return Tasks;
