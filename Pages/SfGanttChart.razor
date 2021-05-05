@@ -17,6 +17,15 @@
                 <button type="button" class="btn btn-primary" @onclick="ExpandAtLevel">Expand</button>
             </td>
         </tr>
+        <tr>
+            <th scope="col"><h6>To Show/Hide Gantt Pane</h6></th>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" class="btn btn-primary" @onclick="ShowChart">ShowGanttPane</button>
+                <button type="button" class="btn btn-primary" @onclick="HideChart">HideGanttPane</button>
+            </td>
+        </tr>
     </tbody>
 </table>
 
@@ -49,10 +58,12 @@
     <GanttTemplates TValue="TaskData">
         <ParentTaskbarTemplate>
             <div class="e-gantt-parent-taskbar e-custom-parent" style="height:22px;border-radius:5px;text-overflow:ellipsis;">
+                <span class="e-task-label" style="color:black;top:18px;font-size:9px;overflow: hidden;white-space: nowrap;">@((context as TaskData).TaskName)</span>
             </div>
         </ParentTaskbarTemplate>
         <TaskbarTemplate>
-            <div class="e-gantt-child-taskbar e-custom-moments" style="height:22px;border-radius:5px;">
+            <div  class="e-gantt-child-taskbar e-custom-moments" style="height:22px;border-radius:5px;">
+                <span class="e-task-label" style="color:black;top:18px;font-size:12px;overflow: hidden;white-space: nowrap;">@((context as TaskData).TaskName)</span>
             </div>
         </TaskbarTemplate>
     </GanttTemplates>
@@ -108,6 +119,14 @@
     public void ExpandAtLevel()
     {
         this.Gantt.ExpandAtLevel(Level);
+    }
+    public void ShowChart()
+    {
+        this.Gantt.SetSplitterPosition(Syncfusion.Blazor.Gantt.SplitterView.Default);
+    }
+    public void HideChart()
+    {
+        this.Gantt.SetSplitterPosition(Syncfusion.Blazor.Gantt.SplitterView.Grid);
     }
     public string Formatter(DateTime? date)
     {

@@ -8,5 +8,15 @@
   <ItemGroup>
        <PackageReference Include="Syncfusion.Blazor" Version="19.1.0.58" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\SfResources.en-US.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\SfResources.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>SfResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+</ItemGroup>
   
 </Project>
